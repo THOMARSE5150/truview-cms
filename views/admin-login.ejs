@@ -1,28 +1,31 @@
-<%- include('partials/header') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+  <div class="glass-card">
+    <h1>Admin Login</h1>
 
-<h1>Admin Login</h1>
+    <% if (flash && flash.error && flash.error.length) { %>
+      <div class="flash-error">
+        <%= flash.error[0] %>
+      </div>
+    <% } %>
 
-<% if (flash.error && flash.error.length) { %>
-  <div class="flash flash-error">
-    <%= flash.error[0] %>
+    <form action="/admin/login" method="post">
+      <label for="username">Username</label>
+      <input type="text" name="username" id="username" placeholder="Enter username" required>
+
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" placeholder="Enter password" required>
+
+      <button type="submit">Login</button>
+    </form>
   </div>
-<% } %>
-<% if (flash.success && flash.success.length) { %>
-  <div class="flash flash-success">
-    <%= flash.success[0] %>
-  </div>
-<% } %>
-
-<form action="/admin/login" method="POST">
-  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-
-  <label for="username">Username</label>
-  <input type="text" id="username" name="username" required>
-
-  <label for="password">Password</label>
-  <input type="password" id="password" name="password" required>
-
-  <button type="submit">Log In</button>
-</form>
-
-<%- include('partials/footer') %>
+</body>
+</html>
