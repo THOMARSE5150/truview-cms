@@ -142,7 +142,7 @@ app.get('/test-db', async (req, res) => {
 
 // Admin login page
 app.get('/admin/login', (req, res) => {
-  res.render('admin-login');
+  res.render('admin-login', { flash: {} }); // fixes crash
 });
 
 // Admin login POST handler
