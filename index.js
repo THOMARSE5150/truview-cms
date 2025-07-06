@@ -14,6 +14,25 @@ const db = new Pool({
   ssl: { rejectUnauthorized: false },
 });
 
+// Test database connection
+async function testConnection() {
+  try {
+    console.log('Testing database connection...');
+    console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
+    console.log('DATABASE_URL format:', process.env.DATABASE_URL ? 'postgresql://postgres:***@db.mvlnoicmdtraonppiptc.supabase.co:5432/postgres' : 'NOT SET');
+    
+    const client = await db.connect();
+    const result = await client.query('SELECT NOW()');
+    console.log('✅ Database connection successful!');
+    console.log('Current time from database:', result.rows[0].now);
+    client.release();
+    return true;
+  } catch (error) {
+    console.error('❌ Database connection failed:', error.message);
+    return false;
+  }
+}
+
 // Database initialization function
 async function initializeDatabase() {
   console.log('Initialising database...');
@@ -71,10 +90,10 @@ async function initializeDatabase() {
       ON CONFLICT (username) DO NOTHING
     `, ['admin', '$2b$10$Id0aOxElSAQVb1JWWWIWQu8bwjMcTkOignQqRpUNa8YI9dMPLjBv.', 'admin']);
 
-    console.log('Database initialised successfully!');
+    console.log('✅ Database initialised successfully!');
     
   } catch (error) {
-    console.error('Database initialisation error:', error);
+    console.error('❌ Database initialisation error:', error);
     throw error;
   }
 }
@@ -92,7 +111,33 @@ app.use(session({
 
 // Home page
 app.get('/', (req, res) => {
-  res.send('CMS is running. Go to <a href="/admin">Admin</a> to log in.');
+  res.send(`
+    <h1>TruView CMS</h1>
+    <p>✅ Server is running successfully!</p>
+    <p><a href="/admin">Go to Admin Panel</a></p>
+    <p><a href="/test-db">Test Database Connection</a></p>
+  `);
+});
+
+// Database test endpoint
+app.get('/test-db', async (req, res) => {
+  try {
+    const client = await db.connect();
+    const result = await client.query('SELECT NOW() as current_time, version() as postgres_version');
+    client.release();
+    
+    res.json({
+      status: 'success',
+      message: 'Database connection working!',
+      data: result.rows[0]
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Database connection failed',
+      error: error.message
+    });
+  }
 });
 
 // Admin login page
@@ -155,13 +200,32 @@ app.post('/contact', async (req, res) => {
 // Initialize database and start server
 async function startServer() {
   try {
+    // Test connection first
+    const connectionWorking = await testConnection();
+    
+    if (!connectionWorking) {
+      console.log('⚠️  Starting server without database initialization...');
+      app.listen(port, () => {
+        console.log(`🚀 TruView CMS running on port ${port}`);
+        console.log(`📍 Visit your app and go to /test-db to check database connection`);
+      });
+      return;
+    }
+    
+    // Initialize database if connection works
     await initializeDatabase();
+    
     app.listen(port, () => {
-      console.log(`TruView CMS running on port ${port}`);
+      console.log(`🚀 TruView CMS running on port ${port}`);
+      console.log(`📍 Admin login: username=admin, password=password`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);
-    process.exit(1);
+    
+    // Start server anyway for debugging
+    app.listen(port, () => {
+      console.log(`🚀 TruView CMS running on port ${port} (DATABASE ISSUES - CHECK /test-db)`);
+    });
   }
 }
 
