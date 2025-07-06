@@ -8,7 +8,7 @@ const { Pool } = require('pg');
 const app = express();
 const port = process.env.PORT || 8080;
 
-// Database connection (Supabase Postgres)
+// Database connection
 const db = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
