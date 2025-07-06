@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const express = require('express');
 const session = require('express-session');
 const flash = require('connect-flash');
@@ -18,7 +17,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 const app = express();
-app.set('trust proxy', 1); // 🛡️ Fixes the trust proxy error from Railway
+app.set('trust proxy', 1);
 
 app.use(helmet());
 app.use(express.static('public'));
@@ -51,6 +50,7 @@ function requireLogin(req, res, next) {
   if (!req.session.isAuthenticated) return res.redirect('/admin/login');
   next();
 }
+
 function requireRole(...roles) {
   return (req, res, next) => {
     if (!req.session.user || !roles.includes(req.session.user.role)) {
@@ -59,8 +59,6 @@ function requireRole(...roles) {
     next();
   };
 }
-
-/* ------------------- YOUR ROUTES ------------------- */
 
 // Dynamic service-location landing pages
 app.get('/services/:serviceSlug/:location', (req, res) => {
@@ -127,7 +125,7 @@ app.post('/contact', express.urlencoded({ extended: true }), async (req, res) =>
   twilioClient.messages.create({
     body: `New contact: ${name}, ${email}, ${phone}`,
     from: process.env.TWILIO_PHONE_NUMBER,
-    to: '+61XXXXXXXXX' // replace with your number
+    to: '+61XXXXXXXXX' // replace with your real phone number
   }).then(() => console.log('Twilio: SMS alert sent'))
     .catch(console.error);
 
@@ -149,8 +147,33 @@ app.get('/sitemap.xml', (req, res) => {
 // Health check
 app.get('/health', (req, res) => res.status(200).json({ status: 'ok', time: new Date() }));
 
+// Stripe webhook
+app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    console.error('Webhook signature error:', err.message);
+    return res.status(400).send('Webhook error');
+  }
+
+  const timestamp = Date.now();
+  db.prepare(`INSERT INTO billing_events (customer_id, event_type, details, timestamp) VALUES (?, ?, ?, ?)`)
+    .run(event.data.object.customer, event.type, JSON.stringify(event.data.object), timestamp);
+
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    console.log(`Subscription successful for customer ${session.customer}`);
+  }
+
+  res.json({ received: true });
+});
+
 // Admin routes
 app.get('/admin/login', (req, res) => res.render('admin-login'));
+
 app.post('/admin/login', loginLimiter, (req, res) => {
   const { username, password } = req.body;
   const user = db.prepare('SELECT * FROM admin_users WHERE username = ?').get(username);
@@ -169,15 +192,23 @@ app.get('/admin/logout', (req, res) => {
   res.redirect('/admin/login');
 });
 
-app.get('/admin', requireLogin, (req, res) => res.render('admin-dashboard'));
+// ✅ FIXED: Pass user to the EJS template properly
+app.get('/admin', requireLogin, (req, res) => {
+  res.render('admin-dashboard', {
+    user: req.session.user
+  });
+});
+
 app.get('/admin/contacts', requireLogin, requireRole('manager', 'admin'), (req, res) => {
   const contacts = db.prepare('SELECT * FROM contact_submissions ORDER BY created_at DESC').all();
   res.render('admin-contacts', { contacts });
 });
+
 app.get('/admin/billing-events', requireLogin, requireRole('manager', 'admin'), (req, res) => {
   const events = db.prepare('SELECT * FROM billing_events ORDER BY timestamp DESC').all();
   res.render('admin-billing-events', { events });
 });
+
 app.get('/admin/billing-analytics', requireLogin, requireRole('manager', 'admin'), (req, res) => {
   const monthlyData = db.prepare(`
     SELECT strftime('%Y-%m', datetime(timestamp/1000, 'unixepoch')) AS month, COUNT(*) AS events
@@ -189,9 +220,7 @@ app.get('/admin/billing-analytics', requireLogin, requireRole('manager', 'admin'
   res.render('admin-billing-analytics', { monthlyData });
 });
 
-/* ------------------- END OF YOUR ROUTES ------------------- */
-
-// 404 handler must be last
+// 404 fallback
 app.use((req, res) => res.status(404).send('Page not found'));
 
 // Start server
