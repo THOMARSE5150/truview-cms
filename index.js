@@ -1,9 +1,5 @@
 require('dotenv').config();
-app.set('trust proxy', 1);
-console.log("ENV CHECK:");
-console.log("SENDGRID_API_KEY starts with:", process.env.SENDGRID_API_KEY ? process.env.SENDGRID_API_KEY.slice(0, 5) : "undefined");
-console.log("TWILIO_ACCOUNT_SID starts with:", process.env.TWILIO_ACCOUNT_SID ? process.env.TWILIO_ACCOUNT_SID.slice(0, 5) : "undefined");
-console.log("TWILIO_AUTH_TOKEN starts with:", process.env.TWILIO_AUTH_TOKEN ? process.env.TWILIO_AUTH_TOKEN.slice(0, 5) : "undefined");
+
 const express = require('express');
 const session = require('express-session');
 const flash = require('connect-flash');
@@ -22,6 +18,15 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 const app = express();
+
+// 🟢 move it HERE, now that app is defined
+app.set('trust proxy', 1);
+
+app.use(helmet());
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.set('view engine', 'ejs');
 app.use(helmet());
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
