@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= service_name %> in <%= location %> | TruView Glass</title>
+  <meta name="description" content="<%= finalDescription.slice(0, 160) %>">
+  <link rel="stylesheet" href="/site.css">
+</head>
+<body>
+  <% include ./partials/header.ejs %>
+
+  <header class="hero" style="background-image: url('<%= hero_image_url %>');">
+    <div class="hero-content">
+      <h1><%= service_name %> in <%= location %></h1>
+      <p><%= finalDescription %></p>
+      <a class="cta-button" href="tel:123456789"><%= cta_text %></a>
+    </div>
+  </header>
+
+  <section class="testimonials container">
+    <h2>What Our Clients Say</h2>
+    <blockquote><%= testimonial1 %></blockquote>
+    <blockquote><%= testimonial2 %></blockquote>
+  </section>
+
+  <section class="faq container">
+    <h2>Frequently Asked Questions</h2>
+    <h3><%= faq1q %></h3>
+    <p><%= faq1a %></p>
+    <h3><%= faq2q %></h3>
+    <p><%= faq2a %></p>
+  </section>
+
+  <% include ./partials/footer.ejs %>
+</body>
+</html>

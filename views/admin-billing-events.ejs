@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Billing Events | TruView Admin</title>
+  <link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+  <% include ./partials/header.ejs %>
+
+  <main class="container">
+    <h1>Billing Events Log</h1>
+    <table>
+      <tr><th>Date</th><th>Customer ID</th><th>Event Type</th><th>Details (JSON)</th></tr>
+      <% events.forEach(e => { %>
+        <tr>
+          <td><%= new Date(e.timestamp).toLocaleString() %></td>
+          <td><%= e.customer_id %></td>
+          <td><%= e.event_type %></td>
+          <td><pre><%= e.details %></pre></td>
+        </tr>
+      <% }) %>
+    </table>
+  </main>
+
+  <% include ./partials/footer.ejs %>
+</body>
+</html>

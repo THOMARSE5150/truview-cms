@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Contact Us | TruView Glass</title>
+  <link rel="stylesheet" href="/site.css">
+</head>
+<body>
+  <% include ./partials/header.ejs %>
+
+  <main class="container" style="max-width:600px;margin:0 auto;">
+    <h1>Contact Us</h1>
+    <% if (flash.success) { %><div class="flash-message success"><%= flash.success %></div><% } %>
+    <% if (flash.error) { %><div class="flash-message error"><%= flash.error %></div><% } %>
+    <form action="/contact" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <label>Name<input type="text" name="name" required></label>
+      <label>Email<input type="email" name="email" required></label>
+      <label>Phone<input type="text" name="phone"></label>
+      <label>Message<textarea name="message" rows="5" required></textarea></label>
+
+      <div class="captcha-container" style="margin:1rem 0;">
+        <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY"></div>
+      </div>
+
+      <button type="submit" class="cta-button">Send Message</button>
+    </form>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  </main>
+
+  <% include ./partials/footer.ejs %>
+</body>
+</html>

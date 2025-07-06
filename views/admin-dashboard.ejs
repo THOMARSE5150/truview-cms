@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard | TruView</title>
+  <link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+  <% include ./partials/header.ejs %>
+
+  <main class="container">
+    <h1>Welcome, <%= req.session.user.username %></h1>
+    <ul>
+      <li><a href="/admin/contacts">Contact Submissions</a></li>
+      <li><a href="/admin/billing-events">Billing Events</a></li>
+      <li><a href="/admin/billing-analytics">Billing Analytics</a></li>
+    </ul>
+  </main>
+
+  <% include ./partials/footer.ejs %>
+</body>
+</html>

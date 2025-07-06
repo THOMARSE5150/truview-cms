@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Login | TruView</title>
+  <link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Admin Login</h1>
+    <% if (flash.error) { %><div class="flash-message error"><%= flash.error %></div><% } %>
+    <form action="/admin/login" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label>Username<input type="text" name="username" required></label>
+      <label>Password<input type="password" name="password" required></label>
+      <button type="submit">Login</button>
+    </form>
+  </main>
+</body>
+</html>

@@ -1,0 +1,88 @@
+body {
+  font-family: sans-serif;
+  background: #f4f4f4;
+  margin: 0;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+h1, h2 {
+  color: #003B73;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul li {
+  margin: 1rem 0;
+}
+
+ul li a {
+  color: #00A6A6;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+ul li a:hover {
+  text-decoration: underline;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.flash-message {
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.flash-message.success {
+  background-color: #d1f7e0;
+  color: #056b35;
+}
+
+.flash-message.error {
+  background-color: #fddede;
+  color: #b60000;
+}
+
+form label {
+  display: block;
+  margin-top: 1rem;
+}
+
+form input, form textarea, form button {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 0.25rem;
+}
+
+form button {
+  background-color: #00A6A6;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+form button:hover {
+  background-color: #008080;
+}

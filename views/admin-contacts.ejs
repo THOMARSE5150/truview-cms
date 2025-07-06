@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Contact Submissions | TruView Admin</title>
+  <link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+  <% include ./partials/header.ejs %>
+
+  <main class="container">
+    <h1>Contact Form Submissions</h1>
+    <table>
+      <tr><th>Date</th><th>Name</th><th>Email</th><th>Phone</th><th>Message</th></tr>
+      <% contacts.forEach(c => { %>
+        <tr>
+          <td><%= new Date(c.created_at).toLocaleString() %></td>
+          <td><%= c.name %></td>
+          <td><%= c.email %></td>
+          <td><%= c.phone %></td>
+          <td><%= c.message %></td>
+        </tr>
+      <% }) %>
+    </table>
+  </main>
+
+  <% include ./partials/footer.ejs %>
+</body>
+</html>

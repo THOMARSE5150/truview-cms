@@ -1,0 +1,72 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #f8f9fa;
+  color: #333;
+}
+
+.hero {
+  color: white;
+  padding: 6rem 2rem;
+  background-size: cover;
+  background-position: center;
+  text-align: center;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero-content p {
+  font-size: 1.25rem;
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: #00A6A6;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.cta-button:hover {
+  background-color: #008080;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.testimonials blockquote {
+  background: white;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-left: 4px solid #00A6A6;
+}
+
+.faq h3 {
+  color: #003B73;
+}
+
+.site-header, .site-footer {
+  background: #003B73;
+  color: white;
+  padding: 1rem 2rem;
+}
+
+.site-header nav a, .site-footer p {
+  color: white;
+  margin-right: 1rem;
+  text-decoration: none;
+}
+
+.logo {
+  height: 50px;
+}

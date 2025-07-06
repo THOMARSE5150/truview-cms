@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Billing Analytics | TruView Admin</title>
+  <link rel="stylesheet" href="/admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <% include ./partials/header.ejs %>
+
+  <main class="container">
+    <h1>Billing Analytics</h1>
+    <canvas id="revenueChart" width="600" height="400"></canvas>
+    <script>
+      const labels = <%- JSON.stringify(monthlyData.map(d => d.month)) %>;
+      const data = <%- JSON.stringify(monthlyData.map(d => d.events)) %>;
+      const ctx = document.getElementById('revenueChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: { labels: labels, datasets: [{ label: 'New Subscriptions/Month', data: data, borderColor: '#00A6A6', tension: 0.2 }] },
+        options: { plugins: { legend: { display: true } }, scales: { y: { beginAtZero: true } } }
+      });
+    </script>
+  </main>
+
+  <% include ./partials/footer.ejs %>
+</body>
+</html>
