@@ -108,6 +108,11 @@ app.post('/admin/logout', (req, res) => {
   res.redirect('/admin/login');
 });
 
+// Contact page
+app.get('/contact', (req, res) => {
+  res.render('contact');
+});
+
 // 404 handler (keep this last!)
 app.use((req, res) => {
   res.status(404).render('404');

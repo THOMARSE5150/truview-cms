@@ -1,30 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin Login</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/admin.css">
+  <%- include('partials/header') %>
+  <title>Admin Login - TruView CMS</title>
 </head>
-<body>
-  <div class="glass-card">
-    <h1>Admin Login</h1>
+<body class="bg-gradient-to-br from-gray-800 to-black flex items-center justify-center min-h-screen text-white">
+  <div class="glass p-8 rounded-2xl shadow-2xl max-w-md w-full text-center">
+    <h1 class="text-3xl font-bold mb-6">Admin Login 🔐</h1>
 
     <% if (flash && flash.error && flash.error.length) { %>
-      <div class="flash-error">
+      <div class="bg-red-600 p-3 rounded-xl mb-4 text-white animate-pulse">
         <%= flash.error[0] %>
       </div>
     <% } %>
 
-    <form action="/admin/login" method="post">
-      <label for="username">Username</label>
-      <input type="text" name="username" id="username" placeholder="Enter username" required>
-
-      <label for="password">Password</label>
-      <input type="password" name="password" id="password" placeholder="Enter password" required>
-
-      <button type="submit">Login</button>
+    <form action="/admin/login" method="POST" class="space-y-4 text-left">
+      <div>
+        <label class="block mb-1 text-sm font-semibold">Username</label>
+        <input type="text" name="username" class="w-full p-3 rounded-xl text-black" required placeholder="Enter username">
+      </div>
+      <div>
+        <label class="block mb-1 text-sm font-semibold">Password</label>
+        <input type="password" name="password" class="w-full p-3 rounded-xl text-black" required placeholder="Enter password">
+      </div>
+      <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-800 rounded-xl font-bold transition duration-200">Login</button>
     </form>
   </div>
 </body>
