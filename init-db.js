@@ -1,70 +1,66 @@
+// init-db.js
+
 const db = require('better-sqlite3')('truview-cms.db');
 
-db.prepare(`CREATE TABLE IF NOT EXISTS locations_content (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  location TEXT UNIQUE
-)`).run();
+console.log("Running database migrations...");
 
-db.prepare(`CREATE TABLE IF NOT EXISTS services_content (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  location_id INTEGER,
-  service_name TEXT,
-  service_slug TEXT,
-  service_description TEXT,
-  hero_image_url TEXT,
-  cta_text TEXT,
-  testimonial1 TEXT,
-  testimonial2 TEXT,
-  faq1q TEXT,
-  faq1a TEXT,
-  faq2q TEXT,
-  faq2a TEXT,
-  FOREIGN KEY(location_id) REFERENCES locations_content(id)
-)`).run();
+// Create global_content table if not exists
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS global_content (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    key TEXT NOT NULL UNIQUE,
+    value TEXT
+  )
+`).run();
 
-db.prepare(`CREATE TABLE IF NOT EXISTS admin_users (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  username TEXT UNIQUE,
-  password_hash TEXT,
-  role TEXT,
-  stripeCustomerId TEXT
-)`).run();
+// Create admin_users table if not exists
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS admin_users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    role TEXT DEFAULT 'manager',
+    stripeCustomerId TEXT
+  )
+`).run();
 
-db.prepare(`CREATE TABLE IF NOT EXISTS global_content (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  key TEXT UNIQUE,
-  value TEXT
-)`).run();
+// Create contact_submissions table if not exists
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS contact_submissions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    email TEXT,
+    phone TEXT,
+    message TEXT,
+    created_at INTEGER
+  )
+`).run();
 
-db.prepare(`CREATE TABLE IF NOT EXISTS admin_logs (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  action TEXT,
-  location TEXT,
-  timestamp INTEGER
-)`).run();
+// Create billing_events table if not exists
+db.prepare(`
+  CREATE TABLE IF NOT EXISTS billing_events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    customer_id TEXT,
+    event_type TEXT,
+    details TEXT,
+    timestamp INTEGER
+  )
+`).run();
 
-db.prepare(`CREATE TABLE IF NOT EXISTS contact_submissions (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT,
-  email TEXT,
-  phone TEXT,
-  message TEXT,
-  created_at INTEGER
-)`).run();
+console.log("Database tables ensured!");
 
-db.prepare(`CREATE TABLE IF NOT EXISTS billing_events (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  customer_id TEXT,
-  event_type TEXT,
-  details TEXT,
-  timestamp INTEGER
-)`).run();
+// Optionally: Insert default content if global_content is empty
+const count = db.prepare('SELECT COUNT(*) AS count FROM global_content').get().count;
+if (count === 0) {
+  db.prepare('INSERT INTO global_content (key, value) VALUES (?, ?)').run('site_name', 'TruView Glass');
+  console.log("Database seeded with default global_content data");
+}
+// Insert admin user if not exists
+db.prepare(`
+  INSERT OR IGNORE INTO admin_users (username, password_hash, role)
+  VALUES ('admin', '$2b$10$Id0aOxElSAQVb1JWWWIWQu8bwjMcTkOignQqRpUNa8YI9dMPLjBv.', 'admin')
+`).run();
 
-db.prepare(`CREATE TABLE IF NOT EXISTS billing_dunning (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  customer_id TEXT,
-  attempts INTEGER DEFAULT 0,
-  last_attempt INTEGER
-)`).run();
+console.log("Admin user ensured!");
 
-console.log('Database initialized.');
+db.close();
