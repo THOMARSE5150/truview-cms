@@ -1,29 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%- include('partials/header') %>
-  <title>Admin Login - TruView CMS</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/admin.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Admin Login</title>
 </head>
-<body class="bg-gradient-to-br from-gray-800 to-black flex items-center justify-center min-h-screen text-white">
-  <div class="glass p-8 rounded-2xl shadow-2xl max-w-md w-full text-center">
-    <h1 class="text-3xl font-bold mb-6">Admin Login 🔐</h1>
-
-    <% if (flash && flash.error && flash.error.length) { %>
-      <div class="bg-red-600 p-3 rounded-xl mb-4 text-white animate-pulse">
-        <%= flash.error[0] %>
-      </div>
+<body class="min-h-screen bg-gray-900 flex items-center justify-center">
+  <div class="bg-gray-800 p-8 rounded-xl shadow-xl w-full max-w-md">
+    <h1 class="text-3xl font-bold mb-4">Admin Login 🔒</h1>
+    <% if (flash.error && flash.error.length) { %>
+      <div class="bg-red-500 text-white p-3 rounded mb-4"><%= flash.error[0] %></div>
     <% } %>
-
-    <form action="/admin/login" method="POST" class="space-y-4 text-left">
-      <div>
-        <label class="block mb-1 text-sm font-semibold">Username</label>
-        <input type="text" name="username" class="w-full p-3 rounded-xl text-black" required placeholder="Enter username">
-      </div>
-      <div>
-        <label class="block mb-1 text-sm font-semibold">Password</label>
-        <input type="password" name="password" class="w-full p-3 rounded-xl text-black" required placeholder="Enter password">
-      </div>
-      <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-800 rounded-xl font-bold transition duration-200">Login</button>
+    <form action="/admin/login" method="POST" class="flex flex-col gap-4">
+      <label class="flex flex-col">
+        <span class="font-semibold">Username</span>
+        <input type="text" name="username" placeholder="Enter username" class="p-2 rounded text-black" required>
+      </label>
+      <label class="flex flex-col">
+        <span class="font-semibold">Password</span>
+        <input type="password" name="password" placeholder="Enter password" class="p-2 rounded text-black" required>
+      </label>
+      <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded">Login</button>
     </form>
   </div>
 </body>
