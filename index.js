@@ -192,11 +192,12 @@ app.get('/admin/logout', (req, res) => {
   res.redirect('/admin/login');
 });
 
-// ✅ FIXED: Pass user to the EJS template properly
-app.get('/admin', requireLogin, (req, res) => {
-  res.render('admin-dashboard', {
-    user: req.session.user
-  });
+// ✅ FIXED: /admin route explicitly passes user context to EJS template
+app.get('/admin', (req, res) => {
+  if (!req.session || !req.session.user) {
+    return res.redirect('/admin/login');
+  }
+  res.render('admin-dashboard', { user: req.session.user });
 });
 
 app.get('/admin/contacts', requireLogin, requireRole('manager', 'admin'), (req, res) => {
@@ -220,8 +221,19 @@ app.get('/admin/billing-analytics', requireLogin, requireRole('manager', 'admin'
   res.render('admin-billing-analytics', { monthlyData });
 });
 
+// Root route to avoid 404 at /
+app.get('/', (req, res) => {
+  res.send('CMS is running. Go to <a href="/admin">/admin</a> to login.');
+});
+
 // 404 fallback
 app.use((req, res) => res.status(404).send('Page not found'));
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err.stack);
+  res.status(500).send('Something went wrong!');
+});
 
 // Start server
 const PORT = process.env.PORT || 3000;
