@@ -1,4 +1,5 @@
 require('dotenv').config();
+app.set('trust proxy', 1);
 console.log("ENV CHECK:");
 console.log("SENDGRID_API_KEY starts with:", process.env.SENDGRID_API_KEY ? process.env.SENDGRID_API_KEY.slice(0, 5) : "undefined");
 console.log("TWILIO_ACCOUNT_SID starts with:", process.env.TWILIO_ACCOUNT_SID ? process.env.TWILIO_ACCOUNT_SID.slice(0, 5) : "undefined");
