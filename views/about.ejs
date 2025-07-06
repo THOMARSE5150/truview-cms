@@ -1,21 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>About Us | TruView Glass</title>
-  <link rel="stylesheet" href="/site.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+  <title>About TruView Glass</title>
 </head>
-<body>
-  <% include ./partials/header.ejs %>
-
-  <main class="container" style="max-width:800px;margin:0 auto;">
-    <h1>About TruView Glass</h1>
-    <p>TruView Glass is a Melbourne-based glass repair and installation company committed to excellence and quality craftsmanship. We bring decades of experience to homes, businesses, and custom projects, delivering precision glass solutions with outstanding customer service.</p>
-
-    <p>Our team specializes in everything from emergency glass repair to pet doors, shower screens, mirrors, and more. We take pride in our attention to detail and use only the highest-quality materials to ensure lasting results.</p>
-
-    <p>Whether you need a simple fix or a complete installation, TruView Glass is here to help — on time, every time.</p>
-  </main>
-
-  <% include ./partials/footer.ejs %>
+<body class="bg-gradient-to-br from-gray-900 to-black flex items-center justify-center min-h-screen text-white">
+  <div class="backdrop-blur-md bg-white/10 p-8 rounded-2xl shadow-2xl max-w-2xl text-center">
+    <h1 class="text-4xl font-bold mb-6">About TruView Glass</h1>
+    <p class="mb-4">TruView Glass is a Melbourne-based glass repair and installation company committed to excellence and quality craftsmanship. We bring decades of experience to homes, businesses, and custom projects, delivering precision glass solutions with outstanding customer service.</p>
+    <p class="mb-4">Our team specialises in everything from emergency glass repair to pet doors, shower screens, mirrors, and more. We take pride in our attention to detail and use only the highest-quality materials to ensure lasting results.</p>
+    <p class="mb-6">Whether you need a simple fix or a complete installation, TruView Glass is here to help — on time, every time.</p>
+    <a href="/" class="py-3 px-6 rounded-xl bg-purple-600 hover:bg-purple-700 transition inline-block">⬅ Go Back Home</a>
+  </div>
 </body>
 </html>
